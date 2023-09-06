@@ -16,7 +16,7 @@ class DataBase:
 db = DataBase()
 
 
-async def get_database() -> AsyncIOMotorClient:
+async def get_database() -> AsyncIOMotorDatabase:
     return db.db  # type: ignore
 
 

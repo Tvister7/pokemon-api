@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class MongoSettings(BaseSettings):
     url: MongoDsn = Field("mongodb://root:example@mongo:27017/")
-    database: str = "pokemons"
+    database: str = "pokemon"
 
     model_config = SettingsConfigDict(
         env_prefix="mongo_", env_file=".env", env_file_encoding="utf-8"

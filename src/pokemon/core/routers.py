@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from pokemon.api.system import router as system_router
+from pokemon.apps.api.system import router as system_router
 
 
 def init_routers(app: FastAPI) -> FastAPI:

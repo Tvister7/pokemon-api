@@ -1,6 +1,9 @@
 launch:
 	poetry run python src
 
+run-debug:
+	docker compose up app_debug
+
 run:
 	docker compose up app
 

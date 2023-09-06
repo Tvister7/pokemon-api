@@ -1,9 +1,12 @@
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class AppSettings(BaseSettings):
-    host: str = "0.0.0.0"
-    port: int = 9000
+    host: str = Field("0.0.0.0")
+    port: int = Field(9000)
+
+    pokemon_url: str = Field("https://pokeapi.co/")
 
     model_config = SettingsConfigDict(
         env_prefix="app_", env_file=".env", env_file_encoding="utf-8"
