@@ -1,0 +1,68 @@
+version: "3.7"
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  pokemon_mongo_volume:
+
+services:
+  base_app:
+    build:
+      context: .
+      args:
+        UID: 1000
+        GID: 1000
+    volumes:
+      - .:/app
+    networks:
+      - backend
+    depends_on:
+      - mongodb
+    command:
+      [
+        "sh",
+        "-c",
+        "uvicorn pokemon.asgi:app --host 0.0.0.0 --port 9000 --workers 1 --reload",
+        # to test websockets consider to add "--lifespan on"
+      ]
+    env_file: .env
+    environment:
+      # - PYTHONASYNCIODEBUG=1
+      - PYTHONPATH=/app/src/
+
+  app:
+    extends:
+      service: base_app
+    ports:
+      - 9000:9000
+
+
+  app_debug:
+    extends:
+      service: base_app
+    command:
+      [
+        "sh",
+        "-c",
+        "pip3 install debugpy && python3 -m debugpy --wait-for-client --listen 0.0.0.0:5678 -m uvicorn pokemon.asgi:app --host 0.0.0.0 --port 9000 --workers 1 --reload",
+      ]
+    ports:
+    - 5678:5678
+    - 9000:9000
+
+
+  test:
+    extends:
+      service: base_app
+    command: sh -c "pytest -s -x --runslow"
+    environment:
+      - PYTEST_ENABLED=true
+
+  mongodb:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
